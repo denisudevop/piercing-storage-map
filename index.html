@@ -1,0 +1,2102 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Карта украшений">
+  <meta name="theme-color" content="#0b0f17">
+  <title>Карта украшений — Пирсинг-студия</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b0f17'/%3E%3Crect x='8' y='10' width='48' height='44' rx='6' fill='none' stroke='%2338bdf8' stroke-width='3'/%3E%3Cline x1='8' y1='25' x2='56' y2='25' stroke='%2338bdf8' stroke-width='2.5'/%3E%3Cline x1='8' y1='40' x2='56' y2='40' stroke='%2338bdf8' stroke-width='2.5'/%3E%3Cline x1='24' y1='10' x2='24' y2='54' stroke='%2338bdf8' stroke-width='2.5'/%3E%3Cline x1='40' y1='10' x2='40' y2='54' stroke='%2338bdf8' stroke-width='2.5'/%3E%3Ccircle cx='32' cy='32.5' r='4.5' fill='%23facc15'/%3E%3C/svg%3E">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='38' fill='%230b0f17'/%3E%3Crect x='24' y='30' width='132' height='120' rx='16' fill='%23131a26' stroke='%2338bdf8' stroke-width='7'/%3E%3Cline x1='24' y1='70' x2='156' y2='70' stroke='%2338bdf8' stroke-width='5'/%3E%3Cline x1='24' y1='110' x2='156' y2='110' stroke='%2338bdf8' stroke-width='5'/%3E%3Cline x1='68' y1='30' x2='68' y2='150' stroke='%2338bdf8' stroke-width='5'/%3E%3Cline x1='112' y1='30' x2='112' y2='150' stroke='%2338bdf8' stroke-width='5'/%3E%3Ccircle cx='90' cy='90' r='13' fill='%23facc15'/%3E%3C/svg%3E">
+  <style>
+    :root {
+      --bg: #0b0f17;
+      --surface: #121824;
+      --surface-2: #182132;
+      --drawer-bg: #151d2b;
+      --drawer-hover: #1d283b;
+      --border: #253147;
+      --border-strong: #344563;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+
+      /* Prefix category palette */
+      --cat-sdl: #38bdf8;
+      --cat-sdl-bg: rgba(56, 189, 248, 0.13);
+      --cat-sdb: #f472b6;
+      --cat-sdb-bg: rgba(244, 114, 182, 0.13);
+      --cat-sdc: #a78bfa;
+      --cat-sdc-bg: rgba(167, 139, 250, 0.14);
+      --cat-int: #34d399;
+      --cat-int-bg: rgba(52, 211, 153, 0.13);
+      --cat-bar: #fbbf24;
+      --cat-bar-bg: rgba(251, 191, 36, 0.13);
+      --cat-supply: #fb923c;
+      --cat-supply-bg: rgba(251, 146, 60, 0.14);
+      --cat-misc: #cbd5e1;
+      --cat-misc-bg: rgba(148, 163, 184, 0.14);
+
+      --match-accent: #facc15;
+      --match-glow: rgba(250, 204, 21, 0.45);
+      --edit-accent: #f59e0b;
+      --danger: #ef4444;
+      --radius: 10px;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, "Helvetica Neue", Arial, sans-serif;
+      --font-mono: ui-monospace, "Cascadia Code", "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      -webkit-tap-highlight-color: transparent;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 12% 0%, rgba(56, 189, 248, 0.08), transparent 36%),
+        radial-gradient(circle at 88% 0%, rgba(167, 139, 250, 0.08), transparent 36%),
+        var(--bg);
+      color: var(--text);
+      padding-bottom: max(28px, env(safe-area-inset-bottom));
+    }
+
+    /* Sticky Top Control Bar */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(11, 15, 23, 0.92);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      padding: max(10px, env(safe-area-inset-top)) 14px 10px;
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
+    }
+
+    .topbar-inner {
+      max-width: 1920px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+
+    .header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .brand-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.22), rgba(167, 139, 250, 0.22));
+      border: 1px solid rgba(56, 189, 248, 0.38);
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+    }
+
+    .brand-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .unsaved-pill {
+      display: none;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: rgba(245, 158, 11, 0.16);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.4);
+    }
+
+    body.has-local-edits .unsaved-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .toolbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      appearance: none;
+      border: 1px solid var(--border-strong);
+      background: var(--surface-2);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      min-height: 42px;
+      padding: 0 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      transition: background 0.15s ease, border-color 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+      user-select: none;
+    }
+
+    .btn:hover {
+      background: #222e45;
+      border-color: #496088;
+    }
+
+    .btn:active {
+      transform: scale(0.97);
+    }
+
+    .btn-edit-toggle[aria-pressed="true"] {
+      background: rgba(245, 158, 11, 0.2);
+      border-color: var(--edit-accent);
+      color: #fde68a;
+      box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
+    }
+
+    .btn-download {
+      display: none;
+      background: linear-gradient(135deg, #0284c7, #2563eb);
+      border-color: #38bdf8;
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+    }
+
+    .btn-download:hover {
+      background: linear-gradient(135deg, #0369a1, #1d4ed8);
+      border-color: #7dd3fc;
+    }
+
+    .btn-reset {
+      display: none;
+      background: rgba(239, 68, 68, 0.12);
+      border-color: rgba(239, 68, 68, 0.45);
+      color: #fca5a5;
+    }
+
+    .btn-reset:hover {
+      background: rgba(239, 68, 68, 0.22);
+      border-color: #ef4444;
+    }
+
+    body.edit-mode .btn-download {
+      display: inline-flex;
+    }
+
+    body.edit-mode.has-local-edits .btn-reset {
+      display: inline-flex;
+    }
+
+    /* Search Row */
+    .search-row {
+      display: flex;
+      align-items: stretch;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .search-box {
+      position: relative;
+      flex: 1 1 320px;
+      display: flex;
+      align-items: center;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 14px;
+      color: var(--text-muted);
+      pointer-events: none;
+      display: flex;
+    }
+
+    #search-input {
+      width: 100%;
+      min-height: 50px;
+      padding: 10px 54px 10px 44px;
+      border-radius: 12px;
+      border: 2px solid var(--border-strong);
+      background: var(--surface);
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    }
+
+    #search-input::placeholder {
+      font-family: var(--font-sans);
+      font-weight: 400;
+      color: var(--text-dim);
+      font-size: 15px;
+    }
+
+    #search-input:focus {
+      border-color: #38bdf8;
+      background: #141c2b;
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.22);
+    }
+
+    #clear-search {
+      position: absolute;
+      right: 4px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 44px;
+      height: 44px;
+      border: none;
+      border-radius: 10px;
+      background: rgba(148, 163, 184, 0.14);
+      color: var(--text);
+      font-size: 24px;
+      line-height: 1;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+
+    #clear-search.visible {
+      display: inline-flex;
+    }
+
+    #clear-search:hover {
+      background: rgba(239, 68, 68, 0.25);
+      color: #fecaca;
+    }
+
+    .search-stats {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 14px;
+      min-height: 50px;
+      border-radius: 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      font-size: 13px;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    .search-stats strong {
+      color: var(--text);
+      font-size: 15px;
+    }
+
+    .search-stats.has-matches {
+      border-color: rgba(250, 204, 21, 0.55);
+      background: rgba(250, 204, 21, 0.1);
+      color: #fef08a;
+    }
+
+    .search-stats.has-matches strong {
+      color: #facc15;
+    }
+
+    .search-stats.no-matches {
+      border-color: rgba(239, 68, 68, 0.5);
+      background: rgba(239, 68, 68, 0.1);
+      color: #fca5a5;
+    }
+
+    /* Legend & Quick Prefix Filter */
+    .legend-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+      scrollbar-width: none;
+    }
+
+    .legend-row::-webkit-scrollbar {
+      display: none;
+    }
+
+    .legend-chip {
+      appearance: none;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 10px;
+      border-radius: 999px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      flex-shrink: 0;
+      transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+    }
+
+    .legend-chip:hover {
+      background: var(--surface-2);
+      color: var(--text);
+    }
+
+    .legend-chip.active {
+      background: var(--surface-2);
+      color: var(--text);
+      border-color: var(--chip-color, #38bdf8);
+      box-shadow: 0 0 0 1px var(--chip-color, #38bdf8);
+    }
+
+    .legend-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--chip-color, #94a3b8);
+      flex-shrink: 0;
+    }
+
+    /* Match Results Bar */
+    .match-results {
+      display: none;
+      max-height: 148px;
+      overflow-y: auto;
+      gap: 6px;
+      flex-wrap: wrap;
+      padding: 6px 0 2px;
+      border-top: 1px solid rgba(37, 49, 71, 0.7);
+    }
+
+    .match-results.visible {
+      display: flex;
+    }
+
+    .match-item {
+      appearance: none;
+      border: 1px solid rgba(250, 204, 21, 0.38);
+      background: rgba(250, 204, 21, 0.08);
+      color: var(--text);
+      border-radius: 9px;
+      padding: 6px 10px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: inherit;
+      font-size: 12px;
+      text-align: left;
+      transition: background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+    }
+
+    .match-item:hover {
+      background: rgba(250, 204, 21, 0.18);
+      border-color: var(--match-accent);
+    }
+
+    .match-item:active {
+      transform: scale(0.98);
+    }
+
+    .match-coord {
+      font-weight: 700;
+      color: #fde047;
+      white-space: nowrap;
+    }
+
+    .match-codes {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      color: #e2e8f0;
+    }
+
+    /* Edit Mode Hint Banner */
+    .edit-banner {
+      display: none;
+      max-width: 1920px;
+      margin: 12px auto 0;
+      padding: 10px 14px;
+      border-radius: 10px;
+      background: rgba(245, 158, 11, 0.12);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      color: #fde68a;
+      font-size: 13px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    body.edit-mode .edit-banner {
+      display: flex;
+    }
+
+    /* Main Workspace & Cabinets Grid */
+    main {
+      max-width: 1920px;
+      margin: 0 auto;
+      padding: 14px;
+    }
+
+    .cabinets-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      align-items: start;
+    }
+
+    .cabinet {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 10px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+      transition: border-color 0.2s ease;
+    }
+
+    body.edit-mode .cabinet {
+      border-color: rgba(245, 158, 11, 0.35);
+    }
+
+    .cabinet-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 2px 4px 10px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 10px;
+    }
+
+    .cabinet-title {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: 0.01em;
+    }
+
+    .cabinet-badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: var(--surface-2);
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+      white-space: nowrap;
+    }
+
+    .cabinet-badge.has-hits {
+      background: rgba(250, 204, 21, 0.16);
+      color: #facc15;
+      border-color: rgba(250, 204, 21, 0.55);
+    }
+
+    /* Exact physical grid: 8 columns total (small = span 1, wide = span 2) */
+    .drawer-grid {
+      display: grid;
+      grid-template-columns: repeat(8, minmax(0, 1fr));
+      gap: 4px;
+    }
+
+    .section-divider {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 4px 0;
+      color: var(--text-dim);
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .section-divider::before,
+    .section-divider::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* Individual Drawer */
+    .drawer {
+      position: relative;
+      appearance: none;
+      font-family: inherit;
+      text-align: left;
+      background: var(--drawer-bg);
+      border: 1px solid var(--border);
+      border-top: 2px solid var(--drawer-accent, var(--border-strong));
+      border-radius: 7px;
+      padding: 13px 3px 4px;
+      min-height: 70px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      gap: 2px;
+      cursor: pointer;
+      color: var(--text);
+      overflow: hidden;
+      transition: opacity 0.18s ease, transform 0.15s ease, border-color 0.18s ease, box-shadow 0.18s ease, background 0.15s ease;
+    }
+
+    .drawer.small {
+      grid-column: span 1;
+    }
+
+    .drawer.wide {
+      grid-column: span 2;
+      padding: 14px 6px 6px;
+      min-height: 66px;
+    }
+
+    .drawer:hover {
+      background: var(--drawer-hover);
+      border-color: #4b6188;
+      z-index: 2;
+    }
+
+    .drawer:active {
+      transform: scale(0.97);
+    }
+
+    body.edit-mode .drawer:hover {
+      border-color: var(--edit-accent);
+      box-shadow: 0 0 0 1px rgba(245, 158, 11, 0.45);
+    }
+
+    .drawer-pos {
+      position: absolute;
+      top: 2px;
+      right: 4px;
+      font-family: var(--font-mono);
+      font-size: 8.5px;
+      line-height: 1;
+      color: var(--text-dim);
+      opacity: 0.78;
+      pointer-events: none;
+    }
+
+    .drawer.empty {
+      background: rgba(15, 20, 30, 0.52);
+      border-style: dashed;
+      border-color: rgba(52, 69, 99, 0.42);
+      border-top-width: 1px;
+      justify-content: center;
+      align-items: center;
+      padding-top: 4px;
+    }
+
+    .drawer.empty .empty-mark {
+      font-size: 12px;
+      color: rgba(100, 116, 139, 0.45);
+      user-select: none;
+    }
+
+    body.edit-mode .drawer.empty .empty-mark {
+      color: rgba(245, 158, 11, 0.65);
+      font-weight: 700;
+    }
+
+    .code-line {
+      font-family: var(--font-mono);
+      font-size: clamp(8.5px, 0.58vw, 10.5px);
+      line-height: 1.18;
+      font-weight: 600;
+      padding: 1.5px 2.5px;
+      border-radius: 4px;
+      color: var(--code-color, var(--text));
+      background: var(--code-bg, transparent);
+      word-break: break-word;
+      overflow-wrap: anywhere;
+      width: 100%;
+    }
+
+    .drawer.wide .code-line {
+      font-size: clamp(9.5px, 0.68vw, 11.5px);
+      padding: 2px 4px;
+    }
+
+    /* Category classes */
+    .cat-sdl { --code-color: var(--cat-sdl); --code-bg: var(--cat-sdl-bg); --drawer-accent: var(--cat-sdl); }
+    .cat-sdb { --code-color: var(--cat-sdb); --code-bg: var(--cat-sdb-bg); --drawer-accent: var(--cat-sdb); }
+    .cat-sdc { --code-color: var(--cat-sdc); --code-bg: var(--cat-sdc-bg); --drawer-accent: var(--cat-sdc); }
+    .cat-int { --code-color: var(--cat-int); --code-bg: var(--cat-int-bg); --drawer-accent: var(--cat-int); }
+    .cat-bar { --code-color: var(--cat-bar); --code-bg: var(--cat-bar-bg); --drawer-accent: var(--cat-bar); }
+    .cat-supply { --code-color: var(--cat-supply); --code-bg: var(--cat-supply-bg); --drawer-accent: var(--cat-supply); }
+    .cat-misc { --code-color: var(--cat-misc); --code-bg: var(--cat-misc-bg); --drawer-accent: var(--cat-misc); }
+
+    /* Search Spotlight Effects */
+    body.filter-active .drawer:not(.is-match) {
+      opacity: 0.15;
+      filter: saturate(0.25);
+    }
+
+    body.filter-active .drawer.is-match {
+      opacity: 1;
+      background: #1d273b;
+      border-color: var(--match-accent);
+      border-top-color: var(--match-accent);
+      box-shadow: 0 0 0 2px rgba(250, 204, 21, 0.72), 0 0 18px var(--match-glow);
+      animation: matchPulse 1.7s ease-in-out infinite;
+      z-index: 3;
+    }
+
+    body.filter-active .drawer.is-match .code-line:not(.code-match) {
+      opacity: 0.42;
+    }
+
+    body.filter-active .drawer.is-match .code-line.code-match {
+      opacity: 1;
+      background: rgba(250, 204, 21, 0.28);
+      color: #fef9c3;
+      box-shadow: inset 0 0 0 1px rgba(250, 204, 21, 0.85);
+      font-weight: 700;
+    }
+
+    .drawer.flash-focus {
+      animation: focusFlash 0.9s ease-out !important;
+    }
+
+    @keyframes matchPulse {
+      0%, 100% {
+        box-shadow: 0 0 0 2px rgba(250, 204, 21, 0.75), 0 0 14px rgba(250, 204, 21, 0.35);
+      }
+      50% {
+        box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.95), 0 0 24px rgba(250, 204, 21, 0.62);
+      }
+    }
+
+    @keyframes focusFlash {
+      0% {
+        transform: scale(1.08);
+        box-shadow: 0 0 0 4px #ffffff, 0 0 32px #facc15;
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    /* Modals */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 300;
+      background: rgba(5, 8, 14, 0.78);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal {
+      width: 100%;
+      max-width: 500px;
+      max-height: 90vh;
+      overflow-y: auto;
+      background: #141b28;
+      border: 1px solid var(--border-strong);
+      border-radius: 16px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.65);
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 12px;
+    }
+
+    .modal-title {
+      margin: 0;
+      font-size: 17px;
+      font-weight: 700;
+    }
+
+    .modal-subtitle {
+      margin-top: 4px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .modal-close {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      color: var(--text);
+      font-size: 22px;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+
+    .modal-close:hover {
+      background: #243149;
+    }
+
+    /* View Modal Content */
+    .view-code-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .view-code-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--code-color, #94a3b8);
+    }
+
+    .view-code-text {
+      font-family: var(--font-mono);
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--code-color, var(--text));
+      word-break: break-word;
+    }
+
+    .btn-copy-sm {
+      min-height: 36px;
+      padding: 0 11px;
+      font-size: 12px;
+      border-radius: 8px;
+    }
+
+    /* Edit Modal Content */
+    .edit-code-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .edit-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .edit-input {
+      flex: 1;
+      min-height: 44px;
+      padding: 8px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border-strong);
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 15px;
+      font-weight: 600;
+      outline: none;
+    }
+
+    .edit-input:focus {
+      border-color: #38bdf8;
+      box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.25);
+    }
+
+    .btn-del-row {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      border: 1px solid rgba(239, 68, 68, 0.45);
+      background: rgba(239, 68, 68, 0.14);
+      color: #fca5a5;
+      font-size: 20px;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+
+    .btn-del-row:hover {
+      background: rgba(239, 68, 68, 0.28);
+      color: #ffffff;
+    }
+
+    .add-code-row {
+      display: flex;
+      gap: 8px;
+      padding-top: 6px;
+      border-top: 1px dashed var(--border);
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      padding-top: 8px;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      background: #2563eb;
+      border-color: #3b82f6;
+      color: #ffffff;
+    }
+
+    .btn-primary:hover {
+      background: #1d4ed8;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: max(20px, env(safe-area-inset-bottom));
+      transform: translateX(-50%) translateY(20px);
+      z-index: 400;
+      background: #1e293b;
+      color: #f8fafc;
+      border: 1px solid #38bdf8;
+      padding: 10px 16px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      white-space: nowrap;
+      max-width: 92vw;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Responsive: Mobile & Tablet (< 900px) */
+    @media (max-width: 899px) {
+      .topbar {
+        padding: max(8px, env(safe-area-inset-top)) 10px 8px;
+      }
+
+      main {
+        padding: 10px;
+      }
+
+      .cabinets-grid {
+        grid-template-columns: 1fr;
+        gap: 18px;
+      }
+
+      .cabinet {
+        padding: 10px 8px;
+      }
+
+      .cabinet-title {
+        font-size: 15px;
+      }
+
+      .drawer-grid {
+        gap: 5px;
+      }
+
+      .drawer {
+        min-height: 76px;
+        padding: 14px 4px 5px;
+      }
+
+      .drawer.wide {
+        min-height: 68px;
+        padding: 14px 7px 6px;
+      }
+
+      .code-line {
+        font-size: clamp(9.5px, 2.15vw, 13px);
+        line-height: 1.22;
+        padding: 2px 3px;
+      }
+
+      .drawer.wide .code-line {
+        font-size: clamp(11px, 2.5vw, 14px);
+        padding: 2.5px 5px;
+      }
+
+      .search-stats {
+        flex: 1 1 auto;
+        justify-content: center;
+        min-height: 44px;
+      }
+    }
+
+    /* Ultra-narrow phones: ensure drawers remain cleanly legible */
+    @media (max-width: 440px) {
+      .cabinet {
+        overflow-x: auto;
+      }
+      .drawer-grid {
+        min-width: 390px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="header-row">
+        <div class="brand">
+          <div class="brand-icon" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+              <line x1="3" y1="9" x2="21" y2="9"></line>
+              <line x1="3" y1="15" x2="21" y2="15"></line>
+              <line x1="9" y1="3" x2="9" y2="21"></line>
+              <line x1="15" y1="3" x2="15" y2="21"></line>
+            </svg>
+          </div>
+          <div>
+            <h1>Карта украшений студии</h1>
+            <div class="brand-sub">
+              <span>3 шкафа • 132 ящика</span>
+              <span class="unsaved-pill">● Есть локальные правки</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="toolbar-actions">
+          <button type="button" id="reset-edits-btn" class="btn btn-reset" title="Сбросить локальные изменения к исходной базе">
+            Сбросить правки
+          </button>
+          <button type="button" id="download-html-btn" class="btn btn-download">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            Скачать обновлённый index.html
+          </button>
+          <button type="button" id="edit-toggle-btn" class="btn btn-edit-toggle" aria-pressed="false">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 20h9"></path>
+              <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+            </svg>
+            <span id="edit-toggle-label">Редактировать</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="search-row">
+        <div class="search-box">
+          <span class="search-icon" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </span>
+          <input
+            id="search-input"
+            type="search"
+            inputmode="search"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="off"
+            spellcheck="false"
+            autofocus
+            placeholder="Поиск кода... например: sdl58, 0058, 120804, taper"
+            aria-label="Поиск украшения по коду"
+          >
+          <button type="button" id="clear-search" aria-label="Очистить поиск" title="Очистить (Esc)">×</button>
+        </div>
+        <div id="search-stats" class="search-stats" aria-live="polite">
+          Введите код для поиска
+        </div>
+      </div>
+
+      <div class="legend-row" id="legend-bar" aria-label="Фильтр и цветовая кодировка по префиксам"></div>
+      <div id="match-results" class="match-results" aria-label="Список найденных совпадений"></div>
+    </div>
+  </header>
+
+  <div class="edit-banner" role="status">
+    <span><strong>Режим редактирования активен:</strong> нажмите на любой ящик, чтобы добавить, изменить или удалить коды. Все правки сохраняются автоматически в браузере.</span>
+  </div>
+
+  <main>
+    <div id="cabinets-container" class="cabinets-grid"></div>
+  </main>
+
+  <!-- Quick View Modal (View Mode) -->
+  <div id="view-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="view-modal-title">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <h2 id="view-modal-title" class="modal-title">Ящик</h2>
+          <div id="view-modal-subtitle" class="modal-subtitle"></div>
+        </div>
+        <button type="button" class="modal-close" data-close-modal="view-modal" aria-label="Закрыть">×</button>
+      </div>
+      <div id="view-code-list" class="view-code-list"></div>
+      <div class="modal-footer">
+        <button type="button" id="view-to-edit-btn" class="btn">Редактировать этот ящик</button>
+        <button type="button" class="btn btn-primary" data-close-modal="view-modal">Закрыть</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Drawer Modal (Edit Mode) -->
+  <div id="edit-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="edit-modal-title">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <h2 id="edit-modal-title" class="modal-title">Редактирование ящика</h2>
+          <div id="edit-modal-subtitle" class="modal-subtitle"></div>
+        </div>
+        <button type="button" class="modal-close" data-close-modal="edit-modal" aria-label="Закрыть">×</button>
+      </div>
+
+      <div id="edit-code-list" class="edit-code-list"></div>
+
+      <div class="add-code-row">
+        <input
+          id="new-code-input"
+          class="edit-input"
+          type="text"
+          autocomplete="off"
+          placeholder="Новый код, напр. SDL-0058-WT"
+          aria-label="Добавить новый код"
+        >
+        <button type="button" id="add-code-btn" class="btn btn-primary">+ Добавить</button>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn" data-close-modal="edit-modal">Отмена</button>
+        <button type="button" id="save-drawer-btn" class="btn btn-primary">Сохранить</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script id="app-script">
+    // __STORAGE_DATA_START__
+    const STORAGE_DATA = [
+      {
+        "id": "shelf-1",
+        "title": "Шкаф 1 (Левый — CHISPAS)",
+        "rows": [
+          {
+            "type": "small",
+            "drawers": [
+              ["SDL-0058-MN", "SDL-0058-ST"],
+              ["SDL-0058-HT", "SDL-0058-LTN"],
+              ["SDL-0216", "SDL-0058-RD", "SDL-0058-HM-RD"],
+              ["SDL-0092", "SDL-0117-GD", "SDL-0117"],
+              ["SDL-0228", "SDL-0273"],
+              ["SDL-0222", "SDL-0066", "SDL-0074-WT"],
+              ["SDL-0328", "SDL-0058-CS-GD"],
+              ["SDL-0058-HM-LTN", "SDL-0058-HM-MN"]
+            ]
+          },
+          {
+            "type": "small",
+            "drawers": [
+              ["INT0010-WT-1620", "INT0010-WT-1630"],
+              ["INT0010-WT-1640"],
+              ["INT0010-AB-1625", "INT0010-PK-1625"],
+              ["INT0008-WT-1604", "INT0008-WT-1605"],
+              ["SDL-0278-WT", "INT0011-WT-1404"],
+              ["INT0016-1605"],
+              [],
+              []
+            ]
+          },
+          {
+            "type": "small",
+            "drawers": [
+              ["SDL-0252-17", "INT0018-17-1604"],
+              ["SDL-0077-WT", "SDL-0107-WT"],
+              ["SDL-0036-WT", "SDL-0291-WT"],
+              ["SDL-0303", "SDL-0004-WT", "SDL-0106-WT"],
+              ["SDL-0236", "SDL-0134-WT", "SDL-0341-GD"],
+              ["SDL-0061-WT", "SDL-0068-WT"],
+              ["SDL-0159", "SDL-0294"],
+              ["SDL-0171", "SDL-0184-WT"]
+            ]
+          },
+          {
+            "type": "small",
+            "drawers": [
+              ["SDL-0306", "SDL-0240", "SDL-0042-WT"],
+              ["SDL-0215", "SDL-0246-WT"],
+              ["SDL-0227", "SDL-0134-SV"],
+              ["SDL-0063", "SDL-01433", "SDL-0086-WT"],
+              ["SDL-0108", "SDL-0055-WT"],
+              ["SDL-0070-WT", "SDL-0103-WT", "SDL-0174-WT"],
+              ["SDL-0145-WT", "SDL-0257-WT"],
+              ["SDL-0163", "SDL-0172", "SDL-0102-WT"]
+            ]
+          },
+          {
+            "type": "wide",
+            "drawers": [
+              ["TAPER 14"],
+              ["TAPER 16"],
+              ["TAPER 18"],
+              ["CHISPAS 16"]
+            ]
+          },
+          {
+            "type": "wide",
+            "drawers": [
+              ["AGUJAS 14"],
+              ["AGUJAS 16"],
+              ["AGUJAS 18"],
+              ["AGUJAS 12/20"]
+            ]
+          },
+          {
+            "type": "wide",
+            "drawers": [
+              ["Q-tips"],
+              ["PADS YODO"],
+              ["PADS ALCOHOL"],
+              ["GASAS"]
+            ]
+          }
+        ]
+      },
+      {
+        "id": "shelf-2",
+        "title": "Шкаф 2 (Средний)",
+        "rows": [
+          {
+            "type": "small",
+            "drawers": [
+              ["SDL-0289", "INT0015-1404"],
+              ["SDL-0123-SP", "SDL-0123-LTR", "SDL-0123-ST"],
+              ["SDL-0441-SV", "SDL-0280-WT", "SDL-0441-GD"],
+              ["SDL-0190", "SDL-0191"],
+              ["SDL-0343", "SDL-0057-WT"],
+              ["SDL-0449-SV", "SDL-0436-GD"],
+              [],
+              []
+            ]
+          },
+          {
+            "type": "small",
+            "drawers": [
+              ["SDL-0083-WT/BK", "SDL-0421-SV", "SDL-0421-GD"],
+              ["SDL-0027-WT", "SDL-0027-GD"],
+              ["SDL-0447-SV", "SDL-0447-GD", "SDL-0011-WT"],
+              ["SDL-0180"],
+              ["SDL-0149-WT", "SDL-0436-SV"],
+              [],
+              [],
+              []
+            ]
+          },
+          {
+            "type": "small",
+            "drawers": [
+              ["SDL-0354", "SDL-0446-WT"],
+              ["SDL-0442", "SDL-0452"],
+              ["SDL-0428-SV", "SDL-0428-GD"],
+              ["SDL-0439", "SDL-0312-SV"],
+              ["BS0001-GD-120803", "BS0001-GD-120804"],
+              ["OLD JEWELRY 1"],
+              ["OLD JEWELRY 2"],
+              ["TOPS 14G"]
+            ]
+          },
+          {
+            "type": "small",
+            "drawers": [
+              [],
+              [],
+              ["BS0008-PK-1608", "BS0008-WT-1610"],
+              ["CLICKER VIEJOS"],
+              ["CLICKER 14G"],
+              ["BS0004-160803", "BS0006-121003"],
+              ["RETENEDORES"],
+              ["MALOS"]
+            ]
+          },
+          {
+            "type": "wide",
+            "drawers": [
+              ["INT00022-1604", "BS0001-120603"],
+              ["BS0001-120803"],
+              ["BS0001-121003"],
+              ["NOSTRIL STUDS"]
+            ]
+          },
+          {
+            "type": "wide",
+            "drawers": [
+              ["BS0003-120603", "BS0003-120803"],
+              ["BS0003-121003"],
+              ["BC0023-WT-25", "BC0024-WT-30", "BS0010-180620", "BC0021-20", "INT00023-180825"],
+              ["SDNR0015-1808", "SDNR0015-1810"]
+            ]
+          },
+          {
+            "type": "wide",
+            "drawers": [
+              ["BS0005-121003", "BS0005-121203"],
+              ["BS0005-120803"],
+              ["SDMD0006-CZ", "SDMD0001-D"],
+              ["SDMD0004-1408", "SDMD0002-1410-1.2", "SDMD0002-1412-1.2", "SDMD0002-1414-1.2"]
+            ]
+          }
+        ]
+      },
+      {
+        "id": "shelf-3",
+        "title": "Шкаф 3 (Правый — OMBLIGOS / CLICKERS)",
+        "rows": [
+          {
+            "type": "small",
+            "drawers": [
+              ["SDB-0011-1412-WT"],
+              ["SDB-0009-WT", "SDB-0009-GD-WT"],
+              ["OMBL VIEJO"],
+              ["SDB-0010-1410-1CZ", "SDB-0010-1410-SV"],
+              ["SDB-0007-WT", "SDB-0012-1412-WT"],
+              ["SDB-0005-1412"],
+              ["SDB-0008-WT", "SDB-0044-WT-1410"],
+              ["SDB-0053-GN", "SDB-0053-WT"]
+            ]
+          },
+          {
+            "type": "small",
+            "drawers": [
+              ["SDB-0018-1410", "SDB-0022-1410", "SDB-0005-1410-WT"],
+              ["SDB-0003-WT", "SDB-0046-WT"],
+              ["SDB-0051", "SDB-0052"],
+              ["SDB-0034", "SDB-0037"],
+              ["SDB-0002-1410", "SDB-0002-GD-1410"],
+              ["SDB-0006-GD", "SDB-0006-WT"],
+              ["SDB-0004", "SDB-0004-GD"],
+              ["SDB-0078-GD"]
+            ]
+          },
+          {
+            "type": "small",
+            "drawers": [
+              ["SDC-0017-SV-1608", "SDC-0017-GD-1610"],
+              ["SDC-0011-1608", "SDC-0010-1608", "SDC-0010-1610"],
+              ["SDC-0042-1606", "SDC-0003-1608", "SDC-0042-1608"],
+              ["SDC-0009-1608", "SDC-0009-1610"],
+              ["SDC-0120-1608", "SDC-0055-WT-1610"],
+              ["SDC-0099-1608", "SDC-0099-GD-1608"],
+              ["SDC-0058-GD-1608", "SDC-0058-GD-1610"],
+              ["SDC-0059-1608", "SDC-0059-1610"]
+            ]
+          },
+          {
+            "type": "small",
+            "drawers": [
+              ["SDC-0028-160", "SDC-0034-WT-1608"],
+              ["SDC-0045-1608", "SDC-0046-1608", "SDC-0063-1610"],
+              ["SDC-0021-1610", "SDC-0066-1610", "SDC-0018-WD-1610"],
+              ["SDC-0070-1608", "SDC-0112-1610", "SDC-0033-WT-1610"],
+              ["SDC-0068-1608", "SDC-0115-1610", "SDC-0015-1610"],
+              ["SDC-0107-1608", "SDC-0107-1610"],
+              ["SDC-0043-WT-1610"],
+              ["SDC-0095-1610", "SDC-0095-GD-1610"]
+            ]
+          },
+          {
+            "type": "wide",
+            "drawers": [
+              ["BS0007-142005", "BS0007-142205"],
+              ["BS0007-141403", "BS0007-141604", "BS0007-141804"],
+              ["NB0001-1416", "NB0002-1414", "NB0013", "NB0004-1414", "NB0005-1414"],
+              ["CHT-0001-1414", "CHT-0003-1414"]
+            ]
+          },
+          {
+            "type": "wide",
+            "drawers": [
+              ["SDC-0001-1606"],
+              ["SDC-0001-1608"],
+              ["SDC-0001-1610"],
+              ["SDC-0001-1612"]
+            ]
+          },
+          {
+            "type": "wide",
+            "drawers": [
+              ["SDC-0001-1806"],
+              ["SDC-0002-1606", "SDC-0002-1608", "SDC-0002-1610", "SDC-0002-1806", "SDC-0002-1808"],
+              ["SDB-0001-1414"],
+              ["BOLITAS"]
+            ]
+          }
+        ]
+      }
+    ];
+    // __STORAGE_DATA_END__
+
+    (() => {
+      const LOCAL_STORAGE_KEY = "piercing_storage_map_v1";
+
+      const CATEGORIES = [
+        { id: "sdl", label: "SDL • Лабреты", color: "#38bdf8", cls: "cat-sdl" },
+        { id: "sdb", label: "SDB • Пупки", color: "#f472b6", cls: "cat-sdb" },
+        { id: "sdc", label: "SDC • Кликеры", color: "#a78bfa", cls: "cat-sdc" },
+        { id: "int", label: "INT • Титан", color: "#34d399", cls: "cat-int" },
+        { id: "bar", label: "BS / BC / SDNR / SDMD / NB / CHT", color: "#fbbf24", cls: "cat-bar" },
+        { id: "supply", label: "Расходники", color: "#fb923c", cls: "cat-supply" },
+        { id: "misc", label: "Прочее", color: "#cbd5e1", cls: "cat-misc" }
+      ];
+
+      function classifyCode(code) {
+        const up = String(code || "").trim().toUpperCase();
+        if (/^SDL\b|^SDL[-0-9]/.test(up)) return "sdl";
+        if (/^SDB\b|^SDB[-0-9]|^OMBL/.test(up)) return "sdb";
+        if (/^SDC\b|^SDC[-0-9]|^CLICKER/.test(up)) return "sdc";
+        if (/^INT\b|^INT[-0-9]/.test(up)) return "int";
+        if (/^(BS|BC|SDNR|SDMD|NB|CHT)|^NOSTRIL/.test(up)) return "bar";
+        if (/^(TAPER|AGUJAS|Q-TIPS|PADS|GASAS|CHISPAS)/.test(up)) return "supply";
+        return "misc";
+      }
+
+      function getCategoryMeta(catId) {
+        return CATEGORIES.find((c) => c.id === catId) || CATEGORIES[CATEGORIES.length - 1];
+      }
+
+      function hashString(str) {
+        let h = 2166136261;
+        for (let i = 0; i < str.length; i++) {
+          h ^= str.charCodeAt(i);
+          h = Math.imul(h, 16777619);
+        }
+        return (h >>> 0).toString(36);
+      }
+
+      const embeddedJson = JSON.stringify(STORAGE_DATA);
+      const embeddedHash = hashString(embeddedJson);
+
+      function loadState() {
+        try {
+          const raw = localStorage.getItem(LOCAL_STORAGE_KEY);
+          if (!raw) return { data: JSON.parse(embeddedJson), isModified: false };
+          const parsed = JSON.parse(raw);
+          if (parsed && parsed.baseHash === embeddedHash && Array.isArray(parsed.data)) {
+            const isModified = JSON.stringify(parsed.data) !== embeddedJson;
+            return { data: parsed.data, isModified };
+          }
+        } catch (err) {
+          console.warn("Failed to read localStorage:", err);
+        }
+        return { data: JSON.parse(embeddedJson), isModified: false };
+      }
+
+      const initial = loadState();
+      let storageData = initial.data;
+      let hasLocalEdits = initial.isModified;
+      let isEditMode = false;
+      let activeCategory = null;
+      let currentQuery = "";
+      let activeModalTarget = null; // { shelfIdx, rowIdx, drawerIdx }
+      let draftCodes = [];
+      let toastTimer = null;
+
+      // DOM elements
+      const cabinetsContainer = document.getElementById("cabinets-container");
+      const searchInput = document.getElementById("search-input");
+      const clearSearchBtn = document.getElementById("clear-search");
+      const searchStats = document.getElementById("search-stats");
+      const matchResults = document.getElementById("match-results");
+      const legendBar = document.getElementById("legend-bar");
+      const editToggleBtn = document.getElementById("edit-toggle-btn");
+      const editToggleLabel = document.getElementById("edit-toggle-label");
+      const downloadHtmlBtn = document.getElementById("download-html-btn");
+      const resetEditsBtn = document.getElementById("reset-edits-btn");
+
+      const viewModal = document.getElementById("view-modal");
+      const viewModalTitle = document.getElementById("view-modal-title");
+      const viewModalSubtitle = document.getElementById("view-modal-subtitle");
+      const viewCodeList = document.getElementById("view-code-list");
+      const viewToEditBtn = document.getElementById("view-to-edit-btn");
+
+      const editModal = document.getElementById("edit-modal");
+      const editModalTitle = document.getElementById("edit-modal-title");
+      const editModalSubtitle = document.getElementById("edit-modal-subtitle");
+      const editCodeList = document.getElementById("edit-code-list");
+      const newCodeInput = document.getElementById("new-code-input");
+      const addCodeBtn = document.getElementById("add-code-btn");
+      const saveDrawerBtn = document.getElementById("save-drawer-btn");
+      const toastEl = document.getElementById("toast");
+
+      function showToast(msg) {
+        toastEl.textContent = msg;
+        toastEl.classList.add("show");
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toastEl.classList.remove("show"), 2600);
+      }
+
+      function persistLocal() {
+        const currentJson = JSON.stringify(storageData);
+        hasLocalEdits = currentJson !== embeddedJson;
+        document.body.classList.toggle("has-local-edits", hasLocalEdits);
+        try {
+          if (hasLocalEdits) {
+            localStorage.setItem(
+              LOCAL_STORAGE_KEY,
+              JSON.stringify({ baseHash: embeddedHash, data: storageData })
+            );
+          } else {
+            localStorage.removeItem(LOCAL_STORAGE_KEY);
+          }
+        } catch (err) {
+          console.warn("Failed to save localStorage:", err);
+        }
+      }
+
+      // Normalization & smart matching (case/space/hyphen-insensitive + smart optional leading zeros after letters)
+      function normalizeBasic(str) {
+        return String(str || "").toLowerCase().replace(/[\s-]+/g, "");
+      }
+
+      function escapeRegex(str) {
+        return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      }
+
+      function buildTokenMatcher(rawToken) {
+        const norm = normalizeBasic(rawToken);
+        if (!norm) return null;
+        // Allow optional leading zeros between letters and a non-zero digit (e.g., "sdl58" matches "sdl0058", "int10" matches "int0010")
+        const flexiblePattern = escapeRegex(norm).replace(/([a-zа-яё])([1-9])/gi, "$10*$2");
+        const regex = new RegExp(flexiblePattern, "i");
+        return (normTarget) => normTarget.includes(norm) || regex.test(normTarget);
+      }
+
+      function buildQueryMatcher(query) {
+        const trimmed = String(query || "").trim();
+        if (!trimmed) return null;
+
+        const combinedMatcher = buildTokenMatcher(trimmed);
+        const tokens = trimmed.split(/\s+/).map(buildTokenMatcher).filter(Boolean);
+
+        return (code) => {
+          const normTarget = normalizeBasic(code);
+          if (combinedMatcher && combinedMatcher(normTarget)) return true;
+          if (tokens.length > 1 && tokens.every((fn) => fn(normTarget))) return true;
+          return false;
+        };
+      }
+
+      function escapeHtml(str) {
+        return String(str)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+
+      // Insert soft line-break opportunities after hyphens and slashes so codes wrap neatly inside narrow drawers
+      function formatCodeHtml(code) {
+        return escapeHtml(code).replace(/([-/])/g, "$1<wbr>");
+      }
+
+      function renderLegend() {
+        legendBar.innerHTML = "";
+        CATEGORIES.forEach((cat) => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "legend-chip" + (activeCategory === cat.id ? " active" : "");
+          btn.style.setProperty("--chip-color", cat.color);
+          btn.innerHTML = `<span class="legend-dot"></span><span>${escapeHtml(cat.label)}</span>`;
+          btn.addEventListener("click", () => {
+            activeCategory = activeCategory === cat.id ? null : cat.id;
+            renderLegend();
+            applyFilter();
+          });
+          legendBar.appendChild(btn);
+        });
+      }
+
+      function getDrawerDomId(shelfIdx, rowIdx, drawerIdx) {
+        return `drawer-${shelfIdx}-${rowIdx}-${drawerIdx}`;
+      }
+
+      function renderCabinets() {
+        cabinetsContainer.innerHTML = "";
+
+        storageData.forEach((shelf, shelfIdx) => {
+          const section = document.createElement("section");
+          section.className = "cabinet";
+          section.dataset.shelfIdx = String(shelfIdx);
+
+          const header = document.createElement("div");
+          header.className = "cabinet-header";
+
+          const title = document.createElement("h2");
+          title.className = "cabinet-title";
+          title.textContent = shelf.title;
+
+          const badge = document.createElement("span");
+          badge.className = "cabinet-badge";
+          badge.id = `cabinet-badge-${shelfIdx}`;
+          badge.textContent = "44 ящика";
+
+          header.appendChild(title);
+          header.appendChild(badge);
+          section.appendChild(header);
+
+          const grid = document.createElement("div");
+          grid.className = "drawer-grid";
+
+          let dividerInserted = false;
+
+          shelf.rows.forEach((row, rowIdx) => {
+            if (row.type === "wide" && !dividerInserted) {
+              dividerInserted = true;
+              const divider = document.createElement("div");
+              divider.className = "section-divider";
+              divider.textContent = "Широкие ящики";
+              grid.appendChild(divider);
+            }
+
+            row.drawers.forEach((codes, drawerIdx) => {
+              const btn = document.createElement("button");
+              btn.type = "button";
+              btn.id = getDrawerDomId(shelfIdx, rowIdx, drawerIdx);
+              btn.className = `drawer ${row.type === "wide" ? "wide" : "small"}`;
+              btn.dataset.shelfIdx = String(shelfIdx);
+              btn.dataset.rowIdx = String(rowIdx);
+              btn.dataset.drawerIdx = String(drawerIdx);
+
+              const coordLabel = `Шкаф ${shelfIdx + 1} • Ряд ${rowIdx + 1} • Ящик ${drawerIdx + 1}`;
+              btn.title = codes.length ? `${coordLabel}\n${codes.join("\n")}` : `${coordLabel} (пусто)`;
+              btn.setAttribute("aria-label", codes.length ? `${coordLabel}: ${codes.join(", ")}` : `${coordLabel}: пусто`);
+
+              const posEl = document.createElement("span");
+              posEl.className = "drawer-pos";
+              posEl.textContent = `${rowIdx + 1}.${drawerIdx + 1}`;
+              btn.appendChild(posEl);
+
+              if (!codes.length) {
+                btn.classList.add("empty");
+                const emptyMark = document.createElement("span");
+                emptyMark.className = "empty-mark";
+                emptyMark.textContent = isEditMode ? "+" : "—";
+                btn.appendChild(emptyMark);
+              } else {
+                const primaryCat = getCategoryMeta(classifyCode(codes[0]));
+                btn.style.setProperty("--drawer-accent", primaryCat.color);
+
+                codes.forEach((code, codeIdx) => {
+                  const cat = getCategoryMeta(classifyCode(code));
+                  const line = document.createElement("span");
+                  line.className = `code-line ${cat.cls}`;
+                  line.dataset.codeIdx = String(codeIdx);
+                  line.innerHTML = formatCodeHtml(code);
+                  btn.appendChild(line);
+                });
+              }
+
+              btn.addEventListener("click", () => {
+                if (isEditMode) {
+                  openEditModal(shelfIdx, rowIdx, drawerIdx);
+                } else {
+                  openViewModal(shelfIdx, rowIdx, drawerIdx);
+                }
+              });
+
+              grid.appendChild(btn);
+            });
+          });
+
+          section.appendChild(grid);
+          cabinetsContainer.appendChild(section);
+        });
+
+        applyFilter();
+      }
+
+      function applyFilter() {
+        const queryMatcher = buildQueryMatcher(currentQuery);
+        const isFilterActive = Boolean(queryMatcher || activeCategory);
+
+        document.body.classList.toggle("filter-active", isFilterActive);
+        clearSearchBtn.classList.toggle("visible", currentQuery.length > 0 || Boolean(activeCategory));
+
+        let totalMatchedDrawers = 0;
+        let totalMatchedCodes = 0;
+        const matches = [];
+
+        storageData.forEach((shelf, shelfIdx) => {
+          let shelfHits = 0;
+          let shelfTotal = 0;
+
+          shelf.rows.forEach((row, rowIdx) => {
+            row.drawers.forEach((codes, drawerIdx) => {
+              shelfTotal++;
+              const drawerEl = document.getElementById(getDrawerDomId(shelfIdx, rowIdx, drawerIdx));
+              if (!drawerEl) return;
+
+              const lineEls = drawerEl.querySelectorAll(".code-line");
+              const matchedCodes = [];
+
+              codes.forEach((code, codeIdx) => {
+                const catMatches = !activeCategory || classifyCode(code) === activeCategory;
+                const textMatches = !queryMatcher || queryMatcher(code);
+                const isHit = isFilterActive && catMatches && textMatches;
+
+                if (lineEls[codeIdx]) {
+                  lineEls[codeIdx].classList.toggle("code-match", isHit);
+                }
+                if (isHit) matchedCodes.push(code);
+              });
+
+              const drawerIsMatch = matchedCodes.length > 0;
+              drawerEl.classList.toggle("is-match", drawerIsMatch);
+
+              if (drawerIsMatch) {
+                shelfHits++;
+                totalMatchedDrawers++;
+                totalMatchedCodes += matchedCodes.length;
+                matches.push({
+                  shelfIdx,
+                  rowIdx,
+                  drawerIdx,
+                  matchedCodes,
+                  allCodes: codes
+                });
+              }
+            });
+          });
+
+          const badge = document.getElementById(`cabinet-badge-${shelfIdx}`);
+          if (badge) {
+            if (isFilterActive) {
+              badge.textContent = shelfHits > 0 ? `Найдено: ${shelfHits}` : "0 совпадений";
+              badge.classList.toggle("has-hits", shelfHits > 0);
+            } else {
+              badge.textContent = `${shelfTotal} ящ.`;
+              badge.classList.remove("has-hits");
+            }
+          }
+        });
+
+        // Update search stats
+        searchStats.classList.remove("has-matches", "no-matches");
+        if (!isFilterActive) {
+          searchStats.textContent = "Введите код или выберите префикс";
+          matchResults.classList.remove("visible");
+          matchResults.innerHTML = "";
+          return;
+        }
+
+        if (totalMatchedDrawers > 0) {
+          searchStats.classList.add("has-matches");
+          searchStats.innerHTML = `Найдено ящиков: <strong>${totalMatchedDrawers}</strong> <span>(кодов: ${totalMatchedCodes})</span>`;
+        } else {
+          searchStats.classList.add("no-matches");
+          searchStats.innerHTML = `<strong>Ничего не найдено</strong>`;
+        }
+
+        // Render match list chips
+        matchResults.innerHTML = "";
+        if (matches.length > 0) {
+          matchResults.classList.add("visible");
+          const maxChips = 60;
+          matches.slice(0, maxChips).forEach((m) => {
+            const chip = document.createElement("button");
+            chip.type = "button";
+            chip.className = "match-item";
+            const coord = `Шкаф ${m.shelfIdx + 1} • Ряд ${m.rowIdx + 1} • Ящик ${m.drawerIdx + 1}`;
+            chip.innerHTML = `<span class="match-coord">${coord}</span><span class="match-codes">${escapeHtml(m.matchedCodes.join(", "))}</span>`;
+            chip.addEventListener("click", () => {
+              const el = document.getElementById(getDrawerDomId(m.shelfIdx, m.rowIdx, m.drawerIdx));
+              if (!el) return;
+              el.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
+              el.classList.remove("flash-focus");
+              void el.offsetWidth;
+              el.classList.add("flash-focus");
+            });
+            matchResults.appendChild(chip);
+          });
+        } else {
+          matchResults.classList.remove("visible");
+        }
+      }
+
+      // View Modal
+      function openViewModal(shelfIdx, rowIdx, drawerIdx) {
+        activeModalTarget = { shelfIdx, rowIdx, drawerIdx };
+        const shelf = storageData[shelfIdx];
+        const row = shelf.rows[rowIdx];
+        const codes = row.drawers[drawerIdx];
+
+        viewModalTitle.textContent = `Шкаф ${shelfIdx + 1} • Ряд ${rowIdx + 1} • Ящик ${drawerIdx + 1}`;
+        viewModalSubtitle.textContent = `${shelf.title} — ${row.type === "wide" ? "Широкий ящик" : "Узкий ящик"}`;
+
+        viewCodeList.innerHTML = "";
+        if (!codes.length) {
+          const empty = document.createElement("div");
+          empty.style.cssText = "padding: 18px; text-align: center; color: #94a3b8; border: 1px dashed #334155; border-radius: 10px;";
+          empty.textContent = "Ящик пуст";
+          viewCodeList.appendChild(empty);
+        } else {
+          codes.forEach((code) => {
+            const cat = getCategoryMeta(classifyCode(code));
+            const card = document.createElement("div");
+            card.className = `view-code-card ${cat.cls}`;
+
+            const text = document.createElement("span");
+            text.className = "view-code-text";
+            text.textContent = code;
+
+            const copyBtn = document.createElement("button");
+            copyBtn.type = "button";
+            copyBtn.className = "btn btn-copy-sm";
+            copyBtn.textContent = "Копировать";
+            copyBtn.addEventListener("click", () => {
+              if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(code).then(() => showToast(`Скопировано: ${code}`)).catch(() => showToast(code));
+              } else {
+                showToast(code);
+              }
+            });
+
+            card.appendChild(text);
+            card.appendChild(copyBtn);
+            viewCodeList.appendChild(card);
+          });
+        }
+
+        viewModal.classList.add("open");
+      }
+
+      // Edit Modal
+      function openEditModal(shelfIdx, rowIdx, drawerIdx) {
+        activeModalTarget = { shelfIdx, rowIdx, drawerIdx };
+        const shelf = storageData[shelfIdx];
+        const row = shelf.rows[rowIdx];
+        draftCodes = [...row.drawers[drawerIdx]];
+
+        editModalTitle.textContent = `Шкаф ${shelfIdx + 1} • Ряд ${rowIdx + 1} • Ящик ${drawerIdx + 1}`;
+        editModalSubtitle.textContent = `${shelf.title} — ${row.type === "wide" ? "Широкий ящик" : "Узкий ящик"}`;
+        newCodeInput.value = "";
+
+        renderEditRows();
+        editModal.classList.add("open");
+        setTimeout(() => newCodeInput.focus(), 60);
+      }
+
+      function renderEditRows() {
+        editCodeList.innerHTML = "";
+        if (!draftCodes.length) {
+          const empty = document.createElement("div");
+          empty.style.cssText = "padding: 12px; text-align: center; color: #94a3b8; font-size: 13px; border: 1px dashed #334155; border-radius: 10px;";
+          empty.textContent = "Ящик пуст — добавьте код ниже";
+          editCodeList.appendChild(empty);
+          return;
+        }
+
+        draftCodes.forEach((code, idx) => {
+          const rowEl = document.createElement("div");
+          rowEl.className = "edit-row";
+
+          const input = document.createElement("input");
+          input.type = "text";
+          input.className = "edit-input";
+          input.value = code;
+          input.autocomplete = "off";
+          input.addEventListener("input", (e) => {
+            draftCodes[idx] = e.target.value;
+          });
+
+          const delBtn = document.createElement("button");
+          delBtn.type = "button";
+          delBtn.className = "btn-del-row";
+          delBtn.title = "Удалить код";
+          delBtn.setAttribute("aria-label", `Удалить ${code}`);
+          delBtn.textContent = "×";
+          delBtn.addEventListener("click", () => {
+            draftCodes.splice(idx, 1);
+            renderEditRows();
+          });
+
+          rowEl.appendChild(input);
+          rowEl.appendChild(delBtn);
+          editCodeList.appendChild(rowEl);
+        });
+      }
+
+      function addDraftCode() {
+        const val = newCodeInput.value.trim();
+        if (!val) return;
+        draftCodes.push(val);
+        newCodeInput.value = "";
+        renderEditRows();
+        newCodeInput.focus();
+      }
+
+      function saveEditModal() {
+        if (!activeModalTarget) return;
+        const pendingVal = newCodeInput.value.trim();
+        if (pendingVal) {
+          draftCodes.push(pendingVal);
+        }
+        const cleaned = draftCodes.map((c) => c.trim()).filter(Boolean);
+        const { shelfIdx, rowIdx, drawerIdx } = activeModalTarget;
+        storageData[shelfIdx].rows[rowIdx].drawers[drawerIdx] = cleaned;
+
+        persistLocal();
+        closeAllModals();
+        renderCabinets();
+        showToast(`Сохранено: Шкаф ${shelfIdx + 1} • Ряд ${rowIdx + 1} • Ящик ${drawerIdx + 1}`);
+      }
+
+      function closeAllModals() {
+        viewModal.classList.remove("open");
+        editModal.classList.remove("open");
+      }
+
+      function setEditMode(enabled) {
+        isEditMode = enabled;
+        document.body.classList.toggle("edit-mode", enabled);
+        editToggleBtn.setAttribute("aria-pressed", String(enabled));
+        editToggleLabel.textContent = enabled ? "Готово" : "Редактировать";
+        renderCabinets();
+      }
+
+      // Generate standalone updated index.html with current storageData baked into const STORAGE_DATA
+      function downloadUpdatedHtml() {
+        const clone = document.documentElement.cloneNode(true);
+
+        // Reset runtime classes & dynamic UI state in cloned DOM
+        const clonedBody = clone.querySelector("body");
+        if (clonedBody) {
+          clonedBody.classList.remove("edit-mode", "filter-active", "has-local-edits");
+        }
+        const clonedToggle = clone.querySelector("#edit-toggle-btn");
+        if (clonedToggle) clonedToggle.setAttribute("aria-pressed", "false");
+        const clonedToggleLabel = clone.querySelector("#edit-toggle-label");
+        if (clonedToggleLabel) clonedToggleLabel.textContent = "Редактировать";
+
+        const clonedSearch = clone.querySelector("#search-input");
+        if (clonedSearch) clonedSearch.removeAttribute("value");
+        const clonedClear = clone.querySelector("#clear-search");
+        if (clonedClear) clonedClear.classList.remove("visible");
+
+        const clonedStats = clone.querySelector("#search-stats");
+        if (clonedStats) {
+          clonedStats.className = "search-stats";
+          clonedStats.textContent = "Введите код для поиска";
+        }
+        const clonedLegend = clone.querySelector("#legend-bar");
+        if (clonedLegend) clonedLegend.innerHTML = "";
+        const clonedMatches = clone.querySelector("#match-results");
+        if (clonedMatches) {
+          clonedMatches.className = "match-results";
+          clonedMatches.innerHTML = "";
+        }
+        const clonedCabinets = clone.querySelector("#cabinets-container");
+        if (clonedCabinets) clonedCabinets.innerHTML = "";
+
+        clone.querySelectorAll(".modal-backdrop").forEach((m) => m.classList.remove("open"));
+        const clonedViewList = clone.querySelector("#view-code-list");
+        if (clonedViewList) clonedViewList.innerHTML = "";
+        const clonedEditList = clone.querySelector("#edit-code-list");
+        if (clonedEditList) clonedEditList.innerHTML = "";
+        const clonedToast = clone.querySelector("#toast");
+        if (clonedToast) {
+          clonedToast.className = "toast";
+          clonedToast.textContent = "";
+        }
+
+        const scriptEl = clone.querySelector("#app-script");
+        if (!scriptEl) {
+          showToast("Ошибка генерации файла");
+          return;
+        }
+
+        const serializedData = JSON.stringify(storageData, null, 2)
+          .replace(/<\/script>/gi, "<\\/script>")
+          .split("\n")
+          .map((line, i) => (i === 0 ? line : "    " + line))
+          .join("\n");
+
+        const markerRegex = /\/\/ __STORAGE_DATA_START__[\s\S]*?\/\/ __STORAGE_DATA_END__/;
+        if (!markerRegex.test(scriptEl.textContent)) {
+          showToast("Не найден маркер STORAGE_DATA");
+          return;
+        }
+
+        scriptEl.textContent = scriptEl.textContent.replace(
+          markerRegex,
+          `// __STORAGE_DATA_START__\n    const STORAGE_DATA = ${serializedData};\n    // __STORAGE_DATA_END__`
+        );
+
+        const finalHtml = "<!DOCTYPE html>\n" + clone.outerHTML;
+        const blob = new Blob([finalHtml], { type: "text/html;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "index.html";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+        showToast("Файл index.html скачан с вашими правками!");
+      }
+
+      // Event Listeners
+      searchInput.addEventListener("input", (e) => {
+        currentQuery = e.target.value;
+        applyFilter();
+      });
+
+      clearSearchBtn.addEventListener("click", () => {
+        currentQuery = "";
+        activeCategory = null;
+        searchInput.value = "";
+        renderLegend();
+        applyFilter();
+        searchInput.focus();
+      });
+
+      editToggleBtn.addEventListener("click", () => {
+        setEditMode(!isEditMode);
+      });
+
+      downloadHtmlBtn.addEventListener("click", downloadUpdatedHtml);
+
+      resetEditsBtn.addEventListener("click", () => {
+        if (!confirm("Сбросить все локальные изменения и вернуться к исходной базе из файла?")) return;
+        storageData = JSON.parse(embeddedJson);
+        persistLocal();
+        renderCabinets();
+        showToast("Локальные правки сброшены");
+      });
+
+      viewToEditBtn.addEventListener("click", () => {
+        if (!activeModalTarget) return;
+        const { shelfIdx, rowIdx, drawerIdx } = activeModalTarget;
+        closeAllModals();
+        if (!isEditMode) setEditMode(true);
+        openEditModal(shelfIdx, rowIdx, drawerIdx);
+      });
+
+      addCodeBtn.addEventListener("click", addDraftCode);
+      newCodeInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          addDraftCode();
+        }
+      });
+
+      saveDrawerBtn.addEventListener("click", saveEditModal);
+
+      document.querySelectorAll("[data-close-modal]").forEach((btn) => {
+        btn.addEventListener("click", closeAllModals);
+      });
+
+      [viewModal, editModal].forEach((backdrop) => {
+        backdrop.addEventListener("click", (e) => {
+          if (e.target === backdrop) closeAllModals();
+        });
+      });
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          if (viewModal.classList.contains("open") || editModal.classList.contains("open")) {
+            closeAllModals();
+          } else if (currentQuery || activeCategory) {
+            currentQuery = "";
+            activeCategory = null;
+            searchInput.value = "";
+            renderLegend();
+            applyFilter();
+          }
+        } else if (
+          e.key === "/" &&
+          document.activeElement !== searchInput &&
+          !viewModal.classList.contains("open") &&
+          !editModal.classList.contains("open") &&
+          !["INPUT", "TEXTAREA"].includes(document.activeElement.tagName)
+        ) {
+          e.preventDefault();
+          searchInput.focus();
+          searchInput.select();
+        }
+      });
+
+      // Init
+      document.body.classList.toggle("has-local-edits", hasLocalEdits);
+      renderLegend();
+      renderCabinets();
+
+      // Autofocus search on desktop without forcing software keyboard abruptly on touch devices
+      if (window.matchMedia && window.matchMedia("(pointer: fine)").matches) {
+        searchInput.focus();
+      }
+    })();
+  </script>
+</body>
+</html>
