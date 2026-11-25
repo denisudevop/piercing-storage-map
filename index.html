@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Карта украшений">
+  <meta name="apple-mobile-web-app-title" content="Storage Map">
   <meta name="theme-color" content="#0b0f17">
-  <title>Карта украшений — Пирсинг-студия</title>
+  <title>Piercing Storage Map</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b0f17'/%3E%3Crect x='8' y='10' width='48' height='44' rx='6' fill='none' stroke='%2338bdf8' stroke-width='3'/%3E%3Cline x1='8' y1='25' x2='56' y2='25' stroke='%2338bdf8' stroke-width='2.5'/%3E%3Cline x1='8' y1='40' x2='56' y2='40' stroke='%2338bdf8' stroke-width='2.5'/%3E%3Cline x1='24' y1='10' x2='24' y2='54' stroke='%2338bdf8' stroke-width='2.5'/%3E%3Cline x1='40' y1='10' x2='40' y2='54' stroke='%2338bdf8' stroke-width='2.5'/%3E%3Ccircle cx='32' cy='32.5' r='4.5' fill='%23facc15'/%3E%3C/svg%3E">
   <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='38' fill='%230b0f17'/%3E%3Crect x='24' y='30' width='132' height='120' rx='16' fill='%23131a26' stroke='%2338bdf8' stroke-width='7'/%3E%3Cline x1='24' y1='70' x2='156' y2='70' stroke='%2338bdf8' stroke-width='5'/%3E%3Cline x1='24' y1='110' x2='156' y2='110' stroke='%2338bdf8' stroke-width='5'/%3E%3Cline x1='68' y1='30' x2='68' y2='150' stroke='%2338bdf8' stroke-width='5'/%3E%3Cline x1='112' y1='30' x2='112' y2='150' stroke='%2338bdf8' stroke-width='5'/%3E%3Ccircle cx='90' cy='90' r='13' fill='%23facc15'/%3E%3C/svg%3E">
   <style>
@@ -44,7 +44,6 @@
       --match-glow: rgba(250, 204, 21, 0.45);
       --edit-accent: #f59e0b;
       --danger: #ef4444;
-      --radius: 10px;
       --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, "Helvetica Neue", Arial, sans-serif;
       --font-mono: ui-monospace, "Cascadia Code", "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
     }
@@ -345,8 +344,8 @@
       color: #fca5a5;
     }
 
-    /* Legend & Quick Prefix Filter */
-    .legend-row {
+    /* Quick Filters Row */
+    .filter-row {
       display: flex;
       align-items: center;
       gap: 6px;
@@ -355,42 +354,43 @@
       scrollbar-width: none;
     }
 
-    .legend-row::-webkit-scrollbar {
+    .filter-row::-webkit-scrollbar {
       display: none;
     }
 
-    .legend-chip {
+    .filter-chip {
       appearance: none;
       border: 1px solid var(--border);
       background: var(--surface);
       color: var(--text-muted);
       font-family: inherit;
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 600;
-      padding: 6px 10px;
+      min-height: 36px;
+      padding: 6px 12px;
       border-radius: 999px;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 7px;
       white-space: nowrap;
       flex-shrink: 0;
-      transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+      transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
     }
 
-    .legend-chip:hover {
+    .filter-chip:hover {
       background: var(--surface-2);
       color: var(--text);
     }
 
-    .legend-chip.active {
+    .filter-chip.active {
       background: var(--surface-2);
       color: var(--text);
       border-color: var(--chip-color, #38bdf8);
       box-shadow: 0 0 0 1px var(--chip-color, #38bdf8);
     }
 
-    .legend-dot {
+    .filter-dot {
       width: 9px;
       height: 9px;
       border-radius: 50%;
@@ -1014,17 +1014,17 @@
             </svg>
           </div>
           <div>
-            <h1>Карта украшений студии</h1>
+            <h1>Piercing Storage Map</h1>
             <div class="brand-sub">
-              <span>3 шкафа • 132 ящика</span>
-              <span class="unsaved-pill">● Есть локальные правки</span>
+              <span>3 cabinets • 132 drawers</span>
+              <span class="unsaved-pill">● Local edits</span>
             </div>
           </div>
         </div>
 
         <div class="toolbar-actions">
-          <button type="button" id="reset-edits-btn" class="btn btn-reset" title="Сбросить локальные изменения к исходной базе">
-            Сбросить правки
+          <button type="button" id="reset-edits-btn" class="btn btn-reset" title="Reset local edits to embedded data">
+            Reset Edits
           </button>
           <button type="button" id="download-html-btn" class="btn btn-download">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -1032,14 +1032,14 @@
               <polyline points="7 10 12 15 17 10"></polyline>
               <line x1="12" y1="15" x2="12" y2="3"></line>
             </svg>
-            Скачать обновлённый index.html
+            Download Updated index.html
           </button>
           <button type="button" id="edit-toggle-btn" class="btn btn-edit-toggle" aria-pressed="false">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
               <path d="M12 20h9"></path>
               <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
             </svg>
-            <span id="edit-toggle-label">Редактировать</span>
+            <span id="edit-toggle-label">Edit</span>
           </button>
         </div>
       </div>
@@ -1061,23 +1061,23 @@
             autocapitalize="off"
             spellcheck="false"
             autofocus
-            placeholder="Поиск кода... например: sdl58, 0058, 120804, taper"
-            aria-label="Поиск украшения по коду"
+            placeholder="Search code... e.g. sdl58, 0058, 120804, taper"
+            aria-label="Search jewelry by code"
           >
-          <button type="button" id="clear-search" aria-label="Очистить поиск" title="Очистить (Esc)">×</button>
+          <button type="button" id="clear-search" aria-label="Clear search" title="Clear (Esc)">×</button>
         </div>
         <div id="search-stats" class="search-stats" aria-live="polite">
-          Введите код для поиска
+          Enter code or pick a filter
         </div>
       </div>
 
-      <div class="legend-row" id="legend-bar" aria-label="Фильтр и цветовая кодировка по префиксам"></div>
-      <div id="match-results" class="match-results" aria-label="Список найденных совпадений"></div>
+      <div class="filter-row" id="filter-bar" aria-label="Jewelry filters"></div>
+      <div id="match-results" class="match-results" aria-label="Matching drawers list"></div>
     </div>
   </header>
 
   <div class="edit-banner" role="status">
-    <span><strong>Режим редактирования активен:</strong> нажмите на любой ящик, чтобы добавить, изменить или удалить коды. Все правки сохраняются автоматически в браузере.</span>
+    <span><strong>Edit mode active:</strong> tap any drawer to add, edit, or delete codes. Changes save automatically in your browser.</span>
   </div>
 
   <main>
@@ -1089,15 +1089,15 @@
     <div class="modal">
       <div class="modal-header">
         <div>
-          <h2 id="view-modal-title" class="modal-title">Ящик</h2>
+          <h2 id="view-modal-title" class="modal-title">Drawer</h2>
           <div id="view-modal-subtitle" class="modal-subtitle"></div>
         </div>
-        <button type="button" class="modal-close" data-close-modal="view-modal" aria-label="Закрыть">×</button>
+        <button type="button" class="modal-close" data-close-modal="view-modal" aria-label="Close">×</button>
       </div>
       <div id="view-code-list" class="view-code-list"></div>
       <div class="modal-footer">
-        <button type="button" id="view-to-edit-btn" class="btn">Редактировать этот ящик</button>
-        <button type="button" class="btn btn-primary" data-close-modal="view-modal">Закрыть</button>
+        <button type="button" id="view-to-edit-btn" class="btn">Edit This Drawer</button>
+        <button type="button" class="btn btn-primary" data-close-modal="view-modal">Close</button>
       </div>
     </div>
   </div>
@@ -1107,10 +1107,10 @@
     <div class="modal">
       <div class="modal-header">
         <div>
-          <h2 id="edit-modal-title" class="modal-title">Редактирование ящика</h2>
+          <h2 id="edit-modal-title" class="modal-title">Edit Drawer</h2>
           <div id="edit-modal-subtitle" class="modal-subtitle"></div>
         </div>
-        <button type="button" class="modal-close" data-close-modal="edit-modal" aria-label="Закрыть">×</button>
+        <button type="button" class="modal-close" data-close-modal="edit-modal" aria-label="Close">×</button>
       </div>
 
       <div id="edit-code-list" class="edit-code-list"></div>
@@ -1121,15 +1121,15 @@
           class="edit-input"
           type="text"
           autocomplete="off"
-          placeholder="Новый код, напр. SDL-0058-WT"
-          aria-label="Добавить новый код"
+          placeholder="New code, e.g. SDL-0058-WT"
+          aria-label="Add new code"
         >
-        <button type="button" id="add-code-btn" class="btn btn-primary">+ Добавить</button>
+        <button type="button" id="add-code-btn" class="btn btn-primary">+ Add</button>
       </div>
 
       <div class="modal-footer">
-        <button type="button" class="btn" data-close-modal="edit-modal">Отмена</button>
-        <button type="button" id="save-drawer-btn" class="btn btn-primary">Сохранить</button>
+        <button type="button" class="btn" data-close-modal="edit-modal">Cancel</button>
+        <button type="button" id="save-drawer-btn" class="btn btn-primary">Save</button>
       </div>
     </div>
   </div>
@@ -1141,7 +1141,7 @@
     const STORAGE_DATA = [
       {
         "id": "shelf-1",
-        "title": "Шкаф 1 (Левый — CHISPAS)",
+        "title": "Cabinet 1 (Left — CHISPAS)",
         "rows": [
           {
             "type": "small",
@@ -1226,7 +1226,7 @@
       },
       {
         "id": "shelf-2",
-        "title": "Шкаф 2 (Средний)",
+        "title": "Cabinet 2 (Middle)",
         "rows": [
           {
             "type": "small",
@@ -1311,7 +1311,7 @@
       },
       {
         "id": "shelf-3",
-        "title": "Шкаф 3 (Правый — OMBLIGOS / CLICKERS)",
+        "title": "Cabinet 3 (Right — OMBLIGOS / CLICKERS)",
         "rows": [
           {
             "type": "small",
@@ -1398,31 +1398,98 @@
     // __STORAGE_DATA_END__
 
     (() => {
-      const LOCAL_STORAGE_KEY = "piercing_storage_map_v1";
+      const LOCAL_STORAGE_KEY = "piercing_storage_map_v2";
 
-      const CATEGORIES = [
-        { id: "sdl", label: "SDL • Лабреты", color: "#38bdf8", cls: "cat-sdl" },
-        { id: "sdb", label: "SDB • Пупки", color: "#f472b6", cls: "cat-sdb" },
-        { id: "sdc", label: "SDC • Кликеры", color: "#a78bfa", cls: "cat-sdc" },
-        { id: "int", label: "INT • Титан", color: "#34d399", cls: "cat-int" },
-        { id: "bar", label: "BS / BC / SDNR / SDMD / NB / CHT", color: "#fbbf24", cls: "cat-bar" },
-        { id: "supply", label: "Расходники", color: "#fb923c", cls: "cat-supply" },
-        { id: "misc", label: "Прочее", color: "#cbd5e1", cls: "cat-misc" }
-      ];
-
-      function classifyCode(code) {
-        const up = String(code || "").trim().toUpperCase();
-        if (/^SDL\b|^SDL[-0-9]/.test(up)) return "sdl";
-        if (/^SDB\b|^SDB[-0-9]|^OMBL/.test(up)) return "sdb";
-        if (/^SDC\b|^SDC[-0-9]|^CLICKER/.test(up)) return "sdc";
-        if (/^INT\b|^INT[-0-9]/.test(up)) return "int";
-        if (/^(BS|BC|SDNR|SDMD|NB|CHT)|^NOSTRIL/.test(up)) return "bar";
-        if (/^(TAPER|AGUJAS|Q-TIPS|PADS|GASAS|CHISPAS)/.test(up)) return "supply";
-        return "misc";
+      function normalizeBasic(str) {
+        return String(str || "").toLowerCase().replace(/[\s-]+/g, "");
       }
 
-      function getCategoryMeta(catId) {
-        return CATEGORIES.find((c) => c.id === catId) || CATEGORIES[CATEGORIES.length - 1];
+      const BASIC_JEWELRY_CODES = new Set(
+        [
+          "SDB-0001-1414",
+          "SDC-0001-1806",
+          "SDC-0001-1808",
+          "SDC-0001-1606",
+          "SDC-0001-1608",
+          "SDC-0001-1610",
+          "SDC-0001-1612",
+          "BC0021-20",
+          "BS0001-120603",
+          "BS0001-120803",
+          "BS0001-121003",
+          "BS0003-120603",
+          "BS0003-120803",
+          "BS0003-121003",
+          "BS0005-120803",
+          "BS0005-121003",
+          "BS0005-121203",
+          "BS0007-141403",
+          "BS0007-141604",
+          "BS0007-141804",
+          "BS0007-142205",
+          "BS0007-142005",
+          "CHT-0001-1414"
+        ].map(normalizeBasic)
+      );
+
+      const FILTERS = [
+        {
+          id: "basic",
+          label: "Basic Jewelry",
+          color: "#38bdf8",
+          match: (code) => BASIC_JEWELRY_CODES.has(normalizeBasic(code))
+        },
+        {
+          id: "clickers",
+          label: "Clickers",
+          color: "#a78bfa",
+          match: (code) => /^SDC\b|^SDC[-0-9]|^CLICKER/i.test(String(code || "").trim())
+        },
+        {
+          id: "belly",
+          label: "Belly Button",
+          color: "#f472b6",
+          match: (code) => /^SDB\b|^SDB[-0-9]|^OMBL/i.test(String(code || "").trim())
+        },
+        {
+          id: "circular",
+          label: "Circular Barbell",
+          color: "#34d399",
+          match: (code) => /^(BS0005|BS0006|BC)/i.test(String(code || "").trim())
+        },
+        {
+          id: "curved",
+          label: "Curved Barbells",
+          color: "#fb923c",
+          match: (code) => /^(BS0003|BS0004|CHT)/i.test(String(code || "").trim())
+        },
+        {
+          id: "bars",
+          label: "Bars",
+          color: "#fbbf24",
+          match: (code) => /^(BS0001|BS0007|BS0008|BS0010|NB)/i.test(String(code || "").trim())
+        }
+      ];
+
+      const STYLE_CATEGORIES = {
+        sdl: { color: "#38bdf8", cls: "cat-sdl" },
+        sdb: { color: "#f472b6", cls: "cat-sdb" },
+        sdc: { color: "#a78bfa", cls: "cat-sdc" },
+        int: { color: "#34d399", cls: "cat-int" },
+        bar: { color: "#fbbf24", cls: "cat-bar" },
+        supply: { color: "#fb923c", cls: "cat-supply" },
+        misc: { color: "#cbd5e1", cls: "cat-misc" }
+      };
+
+      function classifyCodeStyle(code) {
+        const up = String(code || "").trim().toUpperCase();
+        if (/^SDL\b|^SDL[-0-9]/.test(up)) return STYLE_CATEGORIES.sdl;
+        if (/^SDB\b|^SDB[-0-9]|^OMBL/.test(up)) return STYLE_CATEGORIES.sdb;
+        if (/^SDC\b|^SDC[-0-9]|^CLICKER/.test(up)) return STYLE_CATEGORIES.sdc;
+        if (/^INT\b|^INT[-0-9]/.test(up)) return STYLE_CATEGORIES.int;
+        if (/^(BS|BC|SDNR|SDMD|NB|CHT)|^NOSTRIL/.test(up)) return STYLE_CATEGORIES.bar;
+        if (/^(TAPER|AGUJAS|Q-TIPS|PADS|GASAS|CHISPAS)/.test(up)) return STYLE_CATEGORIES.supply;
+        return STYLE_CATEGORIES.misc;
       }
 
       function hashString(str) {
@@ -1456,9 +1523,9 @@
       let storageData = initial.data;
       let hasLocalEdits = initial.isModified;
       let isEditMode = false;
-      let activeCategory = null;
+      let activeFilterId = null;
       let currentQuery = "";
-      let activeModalTarget = null; // { shelfIdx, rowIdx, drawerIdx }
+      let activeModalTarget = null;
       let draftCodes = [];
       let toastTimer = null;
 
@@ -1468,7 +1535,7 @@
       const clearSearchBtn = document.getElementById("clear-search");
       const searchStats = document.getElementById("search-stats");
       const matchResults = document.getElementById("match-results");
-      const legendBar = document.getElementById("legend-bar");
+      const filterBar = document.getElementById("filter-bar");
       const editToggleBtn = document.getElementById("edit-toggle-btn");
       const editToggleLabel = document.getElementById("edit-toggle-label");
       const downloadHtmlBtn = document.getElementById("download-html-btn");
@@ -1514,11 +1581,6 @@
         }
       }
 
-      // Normalization & smart matching (case/space/hyphen-insensitive + smart optional leading zeros after letters)
-      function normalizeBasic(str) {
-        return String(str || "").toLowerCase().replace(/[\s-]+/g, "");
-      }
-
       function escapeRegex(str) {
         return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
       }
@@ -1526,8 +1588,8 @@
       function buildTokenMatcher(rawToken) {
         const norm = normalizeBasic(rawToken);
         if (!norm) return null;
-        // Allow optional leading zeros between letters and a non-zero digit (e.g., "sdl58" matches "sdl0058", "int10" matches "int0010")
-        const flexiblePattern = escapeRegex(norm).replace(/([a-zа-яё])([1-9])/gi, "$10*$2");
+        // Allow optional leading zeros between letters and a non-zero digit (e.g. "sdl58" -> "sdl0058")
+        const flexiblePattern = escapeRegex(norm).replace(/([a-z])([1-9])/gi, "$10*$2");
         const regex = new RegExp(flexiblePattern, "i");
         return (normTarget) => normTarget.includes(norm) || regex.test(normTarget);
       }
@@ -1555,25 +1617,24 @@
           .replace(/"/g, "&quot;");
       }
 
-      // Insert soft line-break opportunities after hyphens and slashes so codes wrap neatly inside narrow drawers
       function formatCodeHtml(code) {
         return escapeHtml(code).replace(/([-/])/g, "$1<wbr>");
       }
 
-      function renderLegend() {
-        legendBar.innerHTML = "";
-        CATEGORIES.forEach((cat) => {
+      function renderFilters() {
+        filterBar.innerHTML = "";
+        FILTERS.forEach((f) => {
           const btn = document.createElement("button");
           btn.type = "button";
-          btn.className = "legend-chip" + (activeCategory === cat.id ? " active" : "");
-          btn.style.setProperty("--chip-color", cat.color);
-          btn.innerHTML = `<span class="legend-dot"></span><span>${escapeHtml(cat.label)}</span>`;
+          btn.className = "filter-chip" + (activeFilterId === f.id ? " active" : "");
+          btn.style.setProperty("--chip-color", f.color);
+          btn.innerHTML = `<span class="filter-dot"></span><span>${escapeHtml(f.label)}</span>`;
           btn.addEventListener("click", () => {
-            activeCategory = activeCategory === cat.id ? null : cat.id;
-            renderLegend();
+            activeFilterId = activeFilterId === f.id ? null : f.id;
+            renderFilters();
             applyFilter();
           });
-          legendBar.appendChild(btn);
+          filterBar.appendChild(btn);
         });
       }
 
@@ -1599,7 +1660,7 @@
           const badge = document.createElement("span");
           badge.className = "cabinet-badge";
           badge.id = `cabinet-badge-${shelfIdx}`;
-          badge.textContent = "44 ящика";
+          badge.textContent = "44 drawers";
 
           header.appendChild(title);
           header.appendChild(badge);
@@ -1615,7 +1676,7 @@
               dividerInserted = true;
               const divider = document.createElement("div");
               divider.className = "section-divider";
-              divider.textContent = "Широкие ящики";
+              divider.textContent = "Wide drawers";
               grid.appendChild(divider);
             }
 
@@ -1628,9 +1689,9 @@
               btn.dataset.rowIdx = String(rowIdx);
               btn.dataset.drawerIdx = String(drawerIdx);
 
-              const coordLabel = `Шкаф ${shelfIdx + 1} • Ряд ${rowIdx + 1} • Ящик ${drawerIdx + 1}`;
-              btn.title = codes.length ? `${coordLabel}\n${codes.join("\n")}` : `${coordLabel} (пусто)`;
-              btn.setAttribute("aria-label", codes.length ? `${coordLabel}: ${codes.join(", ")}` : `${coordLabel}: пусто`);
+              const coordLabel = `Cabinet ${shelfIdx + 1} • Row ${rowIdx + 1} • Drawer ${drawerIdx + 1}`;
+              btn.title = codes.length ? `${coordLabel}\n${codes.join("\n")}` : `${coordLabel} (empty)`;
+              btn.setAttribute("aria-label", codes.length ? `${coordLabel}: ${codes.join(", ")}` : `${coordLabel}: empty`);
 
               const posEl = document.createElement("span");
               posEl.className = "drawer-pos";
@@ -1644,13 +1705,13 @@
                 emptyMark.textContent = isEditMode ? "+" : "—";
                 btn.appendChild(emptyMark);
               } else {
-                const primaryCat = getCategoryMeta(classifyCode(codes[0]));
-                btn.style.setProperty("--drawer-accent", primaryCat.color);
+                const primaryStyle = classifyCodeStyle(codes[0]);
+                btn.style.setProperty("--drawer-accent", primaryStyle.color);
 
                 codes.forEach((code, codeIdx) => {
-                  const cat = getCategoryMeta(classifyCode(code));
+                  const st = classifyCodeStyle(code);
                   const line = document.createElement("span");
-                  line.className = `code-line ${cat.cls}`;
+                  line.className = `code-line ${st.cls}`;
                   line.dataset.codeIdx = String(codeIdx);
                   line.innerHTML = formatCodeHtml(code);
                   btn.appendChild(line);
@@ -1678,10 +1739,11 @@
 
       function applyFilter() {
         const queryMatcher = buildQueryMatcher(currentQuery);
-        const isFilterActive = Boolean(queryMatcher || activeCategory);
+        const activeFilterObj = activeFilterId ? FILTERS.find((f) => f.id === activeFilterId) : null;
+        const isFilterActive = Boolean(queryMatcher || activeFilterObj);
 
         document.body.classList.toggle("filter-active", isFilterActive);
-        clearSearchBtn.classList.toggle("visible", currentQuery.length > 0 || Boolean(activeCategory));
+        clearSearchBtn.classList.toggle("visible", currentQuery.length > 0 || Boolean(activeFilterObj));
 
         let totalMatchedDrawers = 0;
         let totalMatchedCodes = 0;
@@ -1701,9 +1763,9 @@
               const matchedCodes = [];
 
               codes.forEach((code, codeIdx) => {
-                const catMatches = !activeCategory || classifyCode(code) === activeCategory;
+                const filterMatches = !activeFilterObj || activeFilterObj.match(code);
                 const textMatches = !queryMatcher || queryMatcher(code);
-                const isHit = isFilterActive && catMatches && textMatches;
+                const isHit = isFilterActive && filterMatches && textMatches;
 
                 if (lineEls[codeIdx]) {
                   lineEls[codeIdx].classList.toggle("code-match", isHit);
@@ -1722,8 +1784,7 @@
                   shelfIdx,
                   rowIdx,
                   drawerIdx,
-                  matchedCodes,
-                  allCodes: codes
+                  matchedCodes
                 });
               }
             });
@@ -1732,19 +1793,18 @@
           const badge = document.getElementById(`cabinet-badge-${shelfIdx}`);
           if (badge) {
             if (isFilterActive) {
-              badge.textContent = shelfHits > 0 ? `Найдено: ${shelfHits}` : "0 совпадений";
+              badge.textContent = shelfHits > 0 ? `Found: ${shelfHits}` : "0 matches";
               badge.classList.toggle("has-hits", shelfHits > 0);
             } else {
-              badge.textContent = `${shelfTotal} ящ.`;
+              badge.textContent = `${shelfTotal} drawers`;
               badge.classList.remove("has-hits");
             }
           }
         });
 
-        // Update search stats
         searchStats.classList.remove("has-matches", "no-matches");
         if (!isFilterActive) {
-          searchStats.textContent = "Введите код или выберите префикс";
+          searchStats.textContent = "Enter code or pick a filter";
           matchResults.classList.remove("visible");
           matchResults.innerHTML = "";
           return;
@@ -1752,13 +1812,12 @@
 
         if (totalMatchedDrawers > 0) {
           searchStats.classList.add("has-matches");
-          searchStats.innerHTML = `Найдено ящиков: <strong>${totalMatchedDrawers}</strong> <span>(кодов: ${totalMatchedCodes})</span>`;
+          searchStats.innerHTML = `Drawers found: <strong>${totalMatchedDrawers}</strong> <span>(codes: ${totalMatchedCodes})</span>`;
         } else {
           searchStats.classList.add("no-matches");
-          searchStats.innerHTML = `<strong>Ничего не найдено</strong>`;
+          searchStats.innerHTML = `<strong>No matches found</strong>`;
         }
 
-        // Render match list chips
         matchResults.innerHTML = "";
         if (matches.length > 0) {
           matchResults.classList.add("visible");
@@ -1767,7 +1826,7 @@
             const chip = document.createElement("button");
             chip.type = "button";
             chip.className = "match-item";
-            const coord = `Шкаф ${m.shelfIdx + 1} • Ряд ${m.rowIdx + 1} • Ящик ${m.drawerIdx + 1}`;
+            const coord = `Cabinet ${m.shelfIdx + 1} • Row ${m.rowIdx + 1} • Drawer ${m.drawerIdx + 1}`;
             chip.innerHTML = `<span class="match-coord">${coord}</span><span class="match-codes">${escapeHtml(m.matchedCodes.join(", "))}</span>`;
             chip.addEventListener("click", () => {
               const el = document.getElementById(getDrawerDomId(m.shelfIdx, m.rowIdx, m.drawerIdx));
@@ -1791,20 +1850,20 @@
         const row = shelf.rows[rowIdx];
         const codes = row.drawers[drawerIdx];
 
-        viewModalTitle.textContent = `Шкаф ${shelfIdx + 1} • Ряд ${rowIdx + 1} • Ящик ${drawerIdx + 1}`;
-        viewModalSubtitle.textContent = `${shelf.title} — ${row.type === "wide" ? "Широкий ящик" : "Узкий ящик"}`;
+        viewModalTitle.textContent = `Cabinet ${shelfIdx + 1} • Row ${rowIdx + 1} • Drawer ${drawerIdx + 1}`;
+        viewModalSubtitle.textContent = `${shelf.title} — ${row.type === "wide" ? "Wide drawer" : "Narrow drawer"}`;
 
         viewCodeList.innerHTML = "";
         if (!codes.length) {
           const empty = document.createElement("div");
           empty.style.cssText = "padding: 18px; text-align: center; color: #94a3b8; border: 1px dashed #334155; border-radius: 10px;";
-          empty.textContent = "Ящик пуст";
+          empty.textContent = "Drawer is empty";
           viewCodeList.appendChild(empty);
         } else {
           codes.forEach((code) => {
-            const cat = getCategoryMeta(classifyCode(code));
+            const st = classifyCodeStyle(code);
             const card = document.createElement("div");
-            card.className = `view-code-card ${cat.cls}`;
+            card.className = `view-code-card ${st.cls}`;
 
             const text = document.createElement("span");
             text.className = "view-code-text";
@@ -1813,10 +1872,10 @@
             const copyBtn = document.createElement("button");
             copyBtn.type = "button";
             copyBtn.className = "btn btn-copy-sm";
-            copyBtn.textContent = "Копировать";
+            copyBtn.textContent = "Copy";
             copyBtn.addEventListener("click", () => {
               if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(code).then(() => showToast(`Скопировано: ${code}`)).catch(() => showToast(code));
+                navigator.clipboard.writeText(code).then(() => showToast(`Copied: ${code}`)).catch(() => showToast(code));
               } else {
                 showToast(code);
               }
@@ -1838,8 +1897,8 @@
         const row = shelf.rows[rowIdx];
         draftCodes = [...row.drawers[drawerIdx]];
 
-        editModalTitle.textContent = `Шкаф ${shelfIdx + 1} • Ряд ${rowIdx + 1} • Ящик ${drawerIdx + 1}`;
-        editModalSubtitle.textContent = `${shelf.title} — ${row.type === "wide" ? "Широкий ящик" : "Узкий ящик"}`;
+        editModalTitle.textContent = `Cabinet ${shelfIdx + 1} • Row ${rowIdx + 1} • Drawer ${drawerIdx + 1}`;
+        editModalSubtitle.textContent = `${shelf.title} — ${row.type === "wide" ? "Wide drawer" : "Narrow drawer"}`;
         newCodeInput.value = "";
 
         renderEditRows();
@@ -1852,7 +1911,7 @@
         if (!draftCodes.length) {
           const empty = document.createElement("div");
           empty.style.cssText = "padding: 12px; text-align: center; color: #94a3b8; font-size: 13px; border: 1px dashed #334155; border-radius: 10px;";
-          empty.textContent = "Ящик пуст — добавьте код ниже";
+          empty.textContent = "Drawer is empty — add a code below";
           editCodeList.appendChild(empty);
           return;
         }
@@ -1873,8 +1932,8 @@
           const delBtn = document.createElement("button");
           delBtn.type = "button";
           delBtn.className = "btn-del-row";
-          delBtn.title = "Удалить код";
-          delBtn.setAttribute("aria-label", `Удалить ${code}`);
+          delBtn.title = "Delete code";
+          delBtn.setAttribute("aria-label", `Delete ${code}`);
           delBtn.textContent = "×";
           delBtn.addEventListener("click", () => {
             draftCodes.splice(idx, 1);
@@ -1909,7 +1968,7 @@
         persistLocal();
         closeAllModals();
         renderCabinets();
-        showToast(`Сохранено: Шкаф ${shelfIdx + 1} • Ряд ${rowIdx + 1} • Ящик ${drawerIdx + 1}`);
+        showToast(`Saved: Cabinet ${shelfIdx + 1} • Row ${rowIdx + 1} • Drawer ${drawerIdx + 1}`);
       }
 
       function closeAllModals() {
@@ -1921,7 +1980,7 @@
         isEditMode = enabled;
         document.body.classList.toggle("edit-mode", enabled);
         editToggleBtn.setAttribute("aria-pressed", String(enabled));
-        editToggleLabel.textContent = enabled ? "Готово" : "Редактировать";
+        editToggleLabel.textContent = enabled ? "Done" : "Edit";
         renderCabinets();
       }
 
@@ -1929,7 +1988,6 @@
       function downloadUpdatedHtml() {
         const clone = document.documentElement.cloneNode(true);
 
-        // Reset runtime classes & dynamic UI state in cloned DOM
         const clonedBody = clone.querySelector("body");
         if (clonedBody) {
           clonedBody.classList.remove("edit-mode", "filter-active", "has-local-edits");
@@ -1937,7 +1995,7 @@
         const clonedToggle = clone.querySelector("#edit-toggle-btn");
         if (clonedToggle) clonedToggle.setAttribute("aria-pressed", "false");
         const clonedToggleLabel = clone.querySelector("#edit-toggle-label");
-        if (clonedToggleLabel) clonedToggleLabel.textContent = "Редактировать";
+        if (clonedToggleLabel) clonedToggleLabel.textContent = "Edit";
 
         const clonedSearch = clone.querySelector("#search-input");
         if (clonedSearch) clonedSearch.removeAttribute("value");
@@ -1947,10 +2005,10 @@
         const clonedStats = clone.querySelector("#search-stats");
         if (clonedStats) {
           clonedStats.className = "search-stats";
-          clonedStats.textContent = "Введите код для поиска";
+          clonedStats.textContent = "Enter code or pick a filter";
         }
-        const clonedLegend = clone.querySelector("#legend-bar");
-        if (clonedLegend) clonedLegend.innerHTML = "";
+        const clonedFilters = clone.querySelector("#filter-bar");
+        if (clonedFilters) clonedFilters.innerHTML = "";
         const clonedMatches = clone.querySelector("#match-results");
         if (clonedMatches) {
           clonedMatches.className = "match-results";
@@ -1972,7 +2030,7 @@
 
         const scriptEl = clone.querySelector("#app-script");
         if (!scriptEl) {
-          showToast("Ошибка генерации файла");
+          showToast("Failed to generate file");
           return;
         }
 
@@ -1984,7 +2042,7 @@
 
         const markerRegex = /\/\/ __STORAGE_DATA_START__[\s\S]*?\/\/ __STORAGE_DATA_END__/;
         if (!markerRegex.test(scriptEl.textContent)) {
-          showToast("Не найден маркер STORAGE_DATA");
+          showToast("STORAGE_DATA marker not found");
           return;
         }
 
@@ -2003,7 +2061,7 @@
         a.click();
         a.remove();
         setTimeout(() => URL.revokeObjectURL(url), 1000);
-        showToast("Файл index.html скачан с вашими правками!");
+        showToast("Updated index.html downloaded!");
       }
 
       // Event Listeners
@@ -2014,9 +2072,9 @@
 
       clearSearchBtn.addEventListener("click", () => {
         currentQuery = "";
-        activeCategory = null;
+        activeFilterId = null;
         searchInput.value = "";
-        renderLegend();
+        renderFilters();
         applyFilter();
         searchInput.focus();
       });
@@ -2028,11 +2086,11 @@
       downloadHtmlBtn.addEventListener("click", downloadUpdatedHtml);
 
       resetEditsBtn.addEventListener("click", () => {
-        if (!confirm("Сбросить все локальные изменения и вернуться к исходной базе из файла?")) return;
+        if (!confirm("Reset all local edits and restore the embedded data?")) return;
         storageData = JSON.parse(embeddedJson);
         persistLocal();
         renderCabinets();
-        showToast("Локальные правки сброшены");
+        showToast("Local edits reset");
       });
 
       viewToEditBtn.addEventListener("click", () => {
@@ -2067,11 +2125,11 @@
         if (e.key === "Escape") {
           if (viewModal.classList.contains("open") || editModal.classList.contains("open")) {
             closeAllModals();
-          } else if (currentQuery || activeCategory) {
+          } else if (currentQuery || activeFilterId) {
             currentQuery = "";
-            activeCategory = null;
+            activeFilterId = null;
             searchInput.value = "";
-            renderLegend();
+            renderFilters();
             applyFilter();
           }
         } else if (
@@ -2089,10 +2147,9 @@
 
       // Init
       document.body.classList.toggle("has-local-edits", hasLocalEdits);
-      renderLegend();
+      renderFilters();
       renderCabinets();
 
-      // Autofocus search on desktop without forcing software keyboard abruptly on touch devices
       if (window.matchMedia && window.matchMedia("(pointer: fine)").matches) {
         searchInput.focus();
       }
